@@ -1,0 +1,90 @@
+x_i_init = 27852	x_d_init = 0.849976
+y_i_init = 24903	y_d_init = 0.759979
+z_i_init = 23906	z_d_init = 0.729553 (rad)
+
+x_i_calc = 61526	x_d_calc = 1.140193
+y_i_calc =     3	y_d_calc = 0.000056
+z_i_calc = 23901	z_d_calc = 0.729401 (rad)
+
+Modulus = SQRT(x_d_init^2 + y_d_init^2) = 1.140187
+x_i_init = 38920	x_d_init = 1.187744
+y_i_init = 83721	y_d_init = 2.554962
+z_i_init = 39902	z_d_init = 1.217712 (rad)
+
+x_i_calc = 152038	x_d_calc = 2.817551
+y_i_calc =     4	y_d_calc = 0.000074
+z_i_calc = 37209	z_d_calc = 1.135529 (rad)
+
+Modulus = SQRT(x_d_init^2 + y_d_init^2) = 2.817546
+x_i_init = 37820	x_d_init = 1.154175
+y_i_init = 28308	y_d_init = 0.863892
+z_i_init = 38923	z_d_init = 1.187836 (rad)
+
+x_i_calc = 77797	x_d_calc = 1.441725
+y_i_calc =     2	y_d_calc = 0.000037
+z_i_calc = 21053	z_d_calc = 0.642487 (rad)
+
+Modulus = SQRT(x_d_init^2 + y_d_init^2) = 1.441675
+x_i_init = 37281	x_d_init = 1.137726
+y_i_init = 38291	y_d_init = 1.168549
+z_i_init = 29008	z_d_init = 0.885254 (rad)
+
+x_i_calc = 88008	x_d_calc = 1.630954
+y_i_calc =     6	y_d_calc = 0.000111
+z_i_calc = 26169	z_d_calc = 0.798615 (rad)
+
+Modulus = SQRT(x_d_init^2 + y_d_init^2) = 1.630928
+x_i_init = 68903	x_d_init = 2.102753
+y_i_init = 78998	y_d_init = 2.410828
+z_i_init = 49903	z_d_init = 1.522919 (rad)
+
+x_i_calc = 172625	x_d_calc = 3.199067
+y_i_calc =    -8	y_d_calc = -0.000148
+z_i_calc = 27971	z_d_calc = 0.853607 (rad)
+
+Modulus = SQRT(x_d_init^2 + y_d_init^2) = 3.199009
+x_i_init = 27852	x_d_init = 0.849976
+y_i_init = 24903	y_d_init = 0.759979
+z_i_init = 23906	z_d_init = 0.729553 (rad)
+
+x_i_calc = 61526	x_d_calc = 1.140193
+y_i_calc =     3	y_d_calc = 0.000056
+z_i_calc = 23901	z_d_calc = 0.729401 (rad)
+
+Modulus = SQRT(x_d_init^2 + y_d_init^2) = 1.140187
+x_i_init = 38920	x_d_init = 1.187744
+y_i_init = 83721	y_d_init = 2.554962
+z_i_init = 39902	z_d_init = 1.217712 (rad)
+
+x_i_calc = 152038	x_d_calc = 2.817551
+y_i_calc =     4	y_d_calc = 0.000074
+z_i_calc = 37209	z_d_calc = 1.135529 (rad)
+
+Modulus = SQRT(x_d_init^2 + y_d_init^2) = 2.817546
+x_i_init = 37820	x_d_init = 1.154175
+y_i_init = 28308	y_d_init = 0.863892
+z_i_init = 38923	z_d_init = 1.187836 (rad)
+
+x_i_calc = 77797	x_d_calc = 1.441725
+y_i_calc =     2	y_d_calc = 0.000037
+z_i_calc = 21053	z_d_calc = 0.642487 (rad)
+
+Modulus = SQRT(x_d_init^2 + y_d_init^2) = 1.441675
+x_i_init = 37281	x_d_init = 1.137726
+y_i_init = 38291	y_d_init = 1.168549
+z_i_init = 29008	z_d_init = 0.885254 (rad)
+
+x_i_calc = 88008	x_d_calc = 1.630954
+y_i_calc =     6	y_d_calc = 0.000111
+z_i_calc = 26169	z_d_calc = 0.798615 (rad)
+
+Modulus = SQRT(x_d_init^2 + y_d_init^2) = 1.630928
+x_i_init = 68903	x_d_init = 2.102753
+y_i_init = 78998	y_d_init = 2.410828
+z_i_init = 49903	z_d_init = 1.522919 (rad)
+
+x_i_calc = 172625	x_d_calc = 3.199067
+y_i_calc =    -8	y_d_calc = -0.000148
+z_i_calc = 27971	z_d_calc = 0.853607 (rad)
+
+Modulus = SQRT(x_d_init^2 + y_d_init^2) = 3.199009
