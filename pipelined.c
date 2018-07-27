@@ -3,48 +3,77 @@
 #include <stdlib.h>
 #include <string.h>
 
-int z_table[15] = {25735, 15192, 8027, 4074, 2045, 1023, 511, 255, 127, 63, 31, 15, 7, 3, 1};
+int z_table[16] = {25735, 15192, 8027, 4074, 2045, 1023, 511, 255, 127, 63, 31, 15, 7, 3, 1, 0};
+unsigned int op_z_table[8];
 
 void cordic_V_fixed_point( int *x, int *y, int *z) {
     int x_temp_1, y_temp_1, z_temp;
     int x_temp_2, y_temp_2;
-    int i, next_z;
+    int i, j, next_z;
     x_temp_1 = *x;
     y_temp_1 = *y;
     z_temp = 0;
 
+    //    i = (k - j) >> 16;
+    //    j = k & 0b00000000000000001111111111111111;
+
     /* Prologue: set initial value for next_z */
     next_z = z_table[0];
+    
+    int this_loop, next_loop;
 
-    for( i=0; i<14; i++) {
+    int temp = op_z_table[0];
+
+    this_loop = temp >> 16;
+    next_loop = temp & 0b00000000000000001111111111111111;
+
+    for( i=0, j=0; i<14; i+=2, j++) {
 
         if( y_temp_1 > 0) {
             x_temp_2 = x_temp_1 + (y_temp_1 >> i);
             y_temp_2 = y_temp_1 - (x_temp_1 >> i);
-            z_temp += next_z;
+            z_temp += this_loop;
         }
         else {
             x_temp_2 = x_temp_1 - (y_temp_1 >> i);
             y_temp_2 = y_temp_1 + (x_temp_1 >> i);
-            z_temp -= next_z;
+            z_temp -= this_loop;
         }
-
-        next_z = z_table[i + 1];
 
         x_temp_1 = x_temp_2;
         y_temp_1 = y_temp_2;
+
+        if( y_temp_1 > 0) {
+            x_temp_2 = x_temp_1 + (y_temp_1 >> (i + 1));
+            y_temp_2 = y_temp_1 - (x_temp_1 >> (i + 1));
+            z_temp += next_loop;
+        }
+        else {
+            x_temp_2 = x_temp_1 - (y_temp_1 >> (i + 1));
+            y_temp_2 = y_temp_1 + (x_temp_1 >> (i + 1));
+            z_temp -= next_loop;
+        }
+
+        x_temp_1 = x_temp_2;
+        y_temp_1 = y_temp_2;
+
+        temp = op_z_table[j];
+
+        this_loop = temp >> 16;
+        next_loop = temp & 0b00000000000000001111111111111111;
+
     }
 
     /* Epilogue: required as a step in software pipelining. */
     if( y_temp_1 > 0) {
         x_temp_2 = x_temp_1 + (y_temp_1 >> 14);
         y_temp_2 = y_temp_1 - (x_temp_1 >> 14);
-        z_temp += z_table[14];
+        z_temp += next_loop;
     }
     else {
         x_temp_2 = x_temp_1 - (y_temp_1 >> 14);
         y_temp_2 = y_temp_1 + (x_temp_1 >> 14);
-        z_temp -= z_table[14];
+        z_temp -= next_loop;
     }
 
     *x = x_temp_2;
@@ -63,7 +92,7 @@ void verify(int x_i_init, int y_i_init, int z_i_init, int x_i, int y_i, int z_i)
     z_d = ((double)z_i / (1 << 15));                /* float image of z_i */
 
     FILE *out_file;
-    if ((out_file = fopen("results.txt", "a"))){ //== NULL) {
+    if ((out_file = fopen("results.txt", "a"))== NULL) {
         printf("Could not create output file. Printing results to console...\n\n");
         printf( "x_i_init = %5i\tx_d_init = %f\n", x_i_init, x_d_init);
         printf( "y_i_init = %5i\ty_d_init = %f\n", y_i_init, y_d_init);
@@ -94,6 +123,7 @@ void main(int argc, char* argv[]){
     
     int x_i_init, y_i_init, z_i_init;    /* initial values */    
     int x_i, y_i, z_i;                   /* integer (fixed-point) variables */
+    int i, j;
     char *token;
     const char del[2] = ",";
    
@@ -111,8 +141,11 @@ void main(int argc, char* argv[]){
     };
 
     char line[256]; 
+    size_t n = sizeof(z_table);
 
-    int i = 0;
+    for (i = 0, j = 0; i < n; i+=2, j++) {
+        op_z_table[j] = (z_table[i] << 16) + z_table[i + 1];
+    }
 
     while (fgets(line, sizeof(line), input_file)) {
         token = strtok(line, del);
@@ -122,7 +155,6 @@ void main(int argc, char* argv[]){
 	    token = strtok(NULL, del);
 	    z_i_init = (int) strtol(token, (char **)NULL, 10);
         
-        printf("Vectorizing CORDIC: \n\n");
         cordic_V_fixed_point(&x_i, &y_i, &z_i);
         verify(x_i_init, y_i_init, z_i_init, x_i, y_i, z_i);            
     }
@@ -132,9 +164,4 @@ void main(int argc, char* argv[]){
     return;
 
 } /* END of main() function */
-
-
-
-
-
 
