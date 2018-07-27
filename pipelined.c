@@ -3,81 +3,51 @@
 #include <stdlib.h>
 #include <string.h>
 
-int z_table[16] = {25735, 15192, 8027, 4074, 2045, 1023, 511, 255, 127, 63, 31, 15, 7, 3, 1, 0};
+int z_table[15] = {25735, 15192, 8027, 4074, 2045, 1023, 511, 255, 127, 63, 31, 15, 7, 3, 1};
 unsigned int op_z_table[8];
 
 void cordic_V_fixed_point( int *x, int *y, int *z) {
-    int x_temp_1, y_temp_1, z_temp;
-    int x_temp_2, y_temp_2;
-    int i, j, next_z;
+    register int x_temp_1, y_temp_1, z_temp;
+    register int x_temp_2;
+    register int i, next_z;
     x_temp_1 = *x;
     y_temp_1 = *y;
     z_temp = 0;
 
-    //    i = (k - j) >> 16;
-    //    j = k & 0b00000000000000001111111111111111;
-
     /* Prologue: set initial value for next_z */
     next_z = z_table[0];
     
-    int this_loop, next_loop;
-
-    int temp = op_z_table[0];
-
-    this_loop = temp >> 16;
-    next_loop = temp & 0b00000000000000001111111111111111;
-
-    for( i=0, j=0; i<14; i+=2, j++) {
+    for( i=0; i<14; i++) {
 
         if( y_temp_1 > 0) {
             x_temp_2 = x_temp_1 + (y_temp_1 >> i);
-            y_temp_2 = y_temp_1 - (x_temp_1 >> i);
-            z_temp += this_loop;
+            y_temp_1 = y_temp_1 - (x_temp_1 >> i);
+            z_temp += next_z;
         }
         else {
             x_temp_2 = x_temp_1 - (y_temp_1 >> i);
-            y_temp_2 = y_temp_1 + (x_temp_1 >> i);
-            z_temp -= this_loop;
+            y_temp_1 = y_temp_1 + (x_temp_1 >> i);
+            z_temp -= next_z;
         }
 
+        next_z = z_table[i + 1];
         x_temp_1 = x_temp_2;
-        y_temp_1 = y_temp_2;
-
-        if( y_temp_1 > 0) {
-            x_temp_2 = x_temp_1 + (y_temp_1 >> (i + 1));
-            y_temp_2 = y_temp_1 - (x_temp_1 >> (i + 1));
-            z_temp += next_loop;
-        }
-        else {
-            x_temp_2 = x_temp_1 - (y_temp_1 >> (i + 1));
-            y_temp_2 = y_temp_1 + (x_temp_1 >> (i + 1));
-            z_temp -= next_loop;
-        }
-
-        x_temp_1 = x_temp_2;
-        y_temp_1 = y_temp_2;
-
-        temp = op_z_table[j];
-
-        this_loop = temp >> 16;
-        next_loop = temp & 0b00000000000000001111111111111111;
-
     }
 
     /* Epilogue: required as a step in software pipelining. */
     if( y_temp_1 > 0) {
-        x_temp_2 = x_temp_1 + (y_temp_1 >> 14);
-        y_temp_2 = y_temp_1 - (x_temp_1 >> 14);
-        z_temp += next_loop;
+        x_temp_1 = x_temp_1 + (y_temp_1 >> 14);
+        y_temp_1 = y_temp_1 - (x_temp_1 >> 14);
+        z_temp += next_z;
     }
     else {
-        x_temp_2 = x_temp_1 - (y_temp_1 >> 14);
-        y_temp_2 = y_temp_1 + (x_temp_1 >> 14);
-        z_temp -= next_loop;
+        x_temp_1 = x_temp_1 - (y_temp_1 >> 14); //
+        y_temp_1 = y_temp_1 + (x_temp_1 >> 14);
+        z_temp -= next_z;
     }
 
-    *x = x_temp_2;
-    *y = y_temp_2;
+    *x = x_temp_1;
+    *y = y_temp_1;
     *z = z_temp;
 }
 
@@ -141,11 +111,6 @@ void main(int argc, char* argv[]){
     };
 
     char line[256]; 
-    size_t n = sizeof(z_table);
-
-    for (i = 0, j = 0; i < n; i+=2, j++) {
-        op_z_table[j] = (z_table[i] << 16) + z_table[i + 1];
-    }
 
     while (fgets(line, sizeof(line), input_file)) {
         token = strtok(line, del);

@@ -12,6 +12,8 @@ void cordic_V_fixed_point(int *x, int *y, int *z){
 
     x_temp_1 = *x;
     y_temp_1 = *y;
+
+    /* Prologue for loop unrolling */
     z_temp = 0;
 
     for(i=0; i<14; i+=2){ /* we want 15 iterations (for 16 bit numbers/16 bits of precision) */
@@ -19,7 +21,8 @@ void cordic_V_fixed_point(int *x, int *y, int *z){
             x_temp_2 = x_temp_1 + (y_temp_1 >> i);
             y_temp_2 = y_temp_1 - (x_temp_1 >> i);
             z_temp += z_table[i];
-        }else{
+        }
+        else{
             x_temp_2 = x_temp_1 - (y_temp_1 >> i);
             y_temp_2 = y_temp_1 + (x_temp_1 >> i);
             z_temp -= z_table[i];
@@ -32,7 +35,8 @@ void cordic_V_fixed_point(int *x, int *y, int *z){
             x_temp_2 = x_temp_1 + (y_temp_1 >> (i + 1));
             y_temp_2 = y_temp_1 - (x_temp_1 >> (i + 1));
             z_temp += z_table[i + 1];
-        }else{
+        }
+        else{
             x_temp_2 = x_temp_1 - (y_temp_1 >> (i + 1));
             y_temp_2 = y_temp_1 + (x_temp_1 >> (i + 1));
             z_temp -= z_table[i + 1];
@@ -41,11 +45,13 @@ void cordic_V_fixed_point(int *x, int *y, int *z){
         y_temp_1 = y_temp_2;
     }
 
+    /* Epilogue for loop unrolling */
     if(y_temp_1 > 0){
         x_temp_2 = x_temp_1 + (y_temp_1 >> (14));
         y_temp_2 = y_temp_1 - (x_temp_1 >> (14));
         z_temp += z_table[14];
-    }else{
+    }
+    else{
         x_temp_2 = x_temp_1 - (y_temp_1 >> (14));
         y_temp_2 = y_temp_1 + (x_temp_1 >> (14));
         z_temp -= z_table[14];
